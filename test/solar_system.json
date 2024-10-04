@@ -1,0 +1,266 @@
+{
+    "units": {
+      "size": "km",
+      "mass": "kg",
+      "orbit": "km",
+      "length_of_year": "Earth days"
+    },
+    "planets": [
+      {
+        "name": "Mercury",
+        "size": 4880,
+        "mass": 3.30e23,
+        "orbit": 57900000,
+        "orbit_from": "Sun",
+        "length_of_year": 88,
+        "moons": []
+      },
+      {
+        "name": "Venus",
+        "size": 12104,
+        "mass": 4.87e24,
+        "orbit": 108200000,
+        "orbit_from": "Sun",
+        "length_of_year": 225,
+        "moons": []
+      },
+      {
+        "name": "Earth",
+        "size": 12742,
+        "mass": 5.97e24,
+        "orbit": 149600000,
+        "orbit_from": "Sun",
+        "length_of_year": 365.25,
+        "moons": [
+          {
+            "name": "Moon",
+            "size": 3474,
+            "mass": 7.35e22,
+            "orbit": 384400,
+            "orbit_from": "Earth",
+            "length_of_year": 27.3
+          }
+        ]
+      },
+      {
+        "name": "Mars",
+        "size": 6779,
+        "mass": 6.42e23,
+        "orbit": 227900000,
+        "orbit_from": "Sun",
+        "length_of_year": 687,
+        "moons": [
+          {
+            "name": "Phobos",
+            "size": 22.4,
+            "mass": 1.07e16,
+            "orbit": 9378,
+            "orbit_from": "Mars",
+            "length_of_year": 0.3
+          },
+          {
+            "name": "Deimos",
+            "size": 12.4,
+            "mass": 1.48e15,
+            "orbit": 23460,
+            "orbit_from": "Mars",
+            "length_of_year": 1.3
+          }
+        ]
+      },
+      {
+        "name": "Jupiter",
+        "size": 139820,
+        "mass": 1.90e27,
+        "orbit": 778500000,
+        "orbit_from": "Sun",
+        "length_of_year": 4333,
+        "moons": [
+          {
+            "name": "Io",
+            "size": 3643,
+            "mass": 8.93e22,
+            "orbit": 421700,
+            "orbit_from": "Jupiter",
+            "length_of_year": 1.8
+          },
+          {
+            "name": "Europa",
+            "size": 3122,
+            "mass": 4.80e22,
+            "orbit": 671100,
+            "orbit_from": "Jupiter",
+            "length_of_year": 3.5
+          },
+          {
+            "name": "Ganymede",
+            "size": 5268,
+            "mass": 1.48e23,
+            "orbit": 1070400,
+            "orbit_from": "Jupiter",
+            "length_of_year": 7.2
+          },
+          {
+            "name": "Callisto",
+            "size": 4821,
+            "mass": 1.08e23,
+            "orbit": 1882700,
+            "orbit_from": "Jupiter",
+            "length_of_year": 16.7
+          }
+        ]
+      },
+      {
+        "name": "Saturn",
+        "size": 116460,
+        "mass": 5.68e26,
+        "orbit": 1430000000,
+        "orbit_from": "Sun",
+        "length_of_year": 10759,
+        "moons": [
+          {
+            "name": "Titan",
+            "size": 5151,
+            "mass": 1.35e23,
+            "orbit": 1222000,
+            "orbit_from": "Saturn",
+            "length_of_year": 15.9
+          },
+          {
+            "name": "Rhea",
+            "size": 1527,
+            "mass": 2.31e21,
+            "orbit": 527000,
+            "orbit_from": "Saturn",
+            "length_of_year": 4.5
+          }
+        ]
+      },
+      {
+        "name": "Uranus",
+        "size": 50724,
+        "mass": 8.68e25,
+        "orbit": 2870000000,
+        "orbit_from": "Sun",
+        "length_of_year": 30687,
+        "moons": [
+          {
+            "name": "Titania",
+            "size": 1578,
+            "mass": 3.53e21,
+            "orbit": 436300,
+            "orbit_from": "Uranus",
+            "length_of_year": 8.7
+          },
+          {
+            "name": "Oberon",
+            "size": 1523,
+            "mass": 3.01e21,
+            "orbit": 583500,
+            "orbit_from": "Uranus",
+            "length_of_year": 13.5
+          }
+        ]
+      },
+      {
+        "name": "Neptune",
+        "size": 49244,
+        "mass": 1.02e26,
+        "orbit": 4500000000,
+        "orbit_from": "Sun",
+        "length_of_year": 60190,
+        "moons": [
+          {
+            "name": "Triton",
+            "size": 2707,
+            "mass": 2.14e22,
+            "orbit": 354800,
+            "orbit_from": "Neptune",
+            "length_of_year": 5.9
+          }
+        ]
+      }
+    ],
+    "planetoids": [
+      {
+        "name": "Ceres",
+        "size": 940,
+        "mass": 9.39e20,
+        "orbit": 413700000,
+        "orbit_from": "Sun",
+        "length_of_year": 1682,
+        "moons": []
+      },
+      {
+        "name": "Pluto",
+        "size": 2377,
+        "mass": 1.31e22,
+        "orbit": 5910000000,
+        "orbit_from": "Sun",
+        "length_of_year": 90560,
+        "moons": [
+          {
+            "name": "Charon",
+            "size": 1212,
+            "mass": 1.52e21,
+            "orbit": 19570,
+            "orbit_from": "Pluto",
+            "length_of_year": 6.4
+          }
+        ]
+      },
+      {
+        "name": "Haumea",
+        "size": 1632,
+        "mass": 4.01e21,
+        "orbit": 6450000000,
+        "orbit_from": "Sun",
+        "length_of_year": 103500,
+        "moons": [
+          {
+            "name": "Hi'iaka",
+            "size": 310,
+            "mass": 1.79e19,
+            "orbit": 49880,
+            "orbit_from": "Haumea",
+            "length_of_year": 49.1
+          },
+          {
+            "name": "Namaka",
+            "size": 170,
+            "mass": 1.79e18,
+            "orbit": 25570,
+            "orbit_from": "Haumea",
+            "length_of_year": 18.3
+          }
+        ]
+      },
+      {
+        "name": "Makemake",
+        "size": 1434,
+        "mass": 3.10e21,
+        "orbit": 6850000000,
+        "orbit_from": "Sun",
+        "length_of_year": 112900,
+        "moons": []
+      },
+      {
+        "name": "Eris",
+        "size": 2326,
+        "mass": 1.66e22,
+        "orbit": 10120000000,
+        "orbit_from": "Sun",
+        "length_of_year": 203600,
+        "moons": [
+          {
+            "name": "Dysnomia",
+            "size": 700,
+            "mass": 4.00e20,
+            "orbit": 37370,
+            "orbit_from": "Eris",
+            "length_of_year": 15.8
+          }
+        ]
+      }
+    ]
+  }
