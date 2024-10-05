@@ -32,6 +32,7 @@ markdown-toc -i README.md
   - [How it works](#how-it-works)
     - [Superdicts](#superdicts)
     - [Superlists](#superlists)
+    - [Why Combining SuperDicts with SuperLists?](#why-combining-superdicts-with-superlists)
   - [Install](#install)
     - [From the repository](#from-the-repository)
   - [Usage](#usage)
@@ -88,6 +89,13 @@ A **superlist** is a list where all dictionary items have been
 
 > ⚠️ **Superlists are indispensable** <br> They were the missing piece of the jigsaw puzzle;
 > without them, it is not possible to convert deep data structures into supercollections. 
+
+### Why Combining SuperDicts with SuperLists?
+
+The structure of JSON, YAML or HTML data is generally a deeply nested combination of dictionaries and lists. Using superdictionaries alone would not be sufficient, since lists within the data contained in a list would still contain regular (unconverted) dictionaries; this would require you to switch back to the standard dictionary access method. 
+
+By combining superdictionaries and superlists, 
+it is possible to ensure that all nested dictionaries within lists will also be converted to SuperDicts, allowing for a consistent dot notation throughout the entire data structure.
 
 > 💡 **Deep conversion** <br> SuperLists objects, combined with SuperDicts make sure that the most complex
 > datastructures (from json or YAML) can be recursively converted into 
@@ -189,7 +197,7 @@ or Web sources.
 > is unsufficiently guaranteed for your needs, or is untrusted.
 
 If you want to impose strongly formatted data structures in your code, one solution is 
-to create dataclasses: [the standard ones](https://docs.python.org/3/library/dataclasses.html); especially those of [Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/), which make implicit and explicit
+to create [dataclasses](https://docs.python.org/3/library/dataclasses.html); especially those of [Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/), which make implicit and explicit
 controls on the integrity of the source data.
 
 ## Related data structures and ideas
@@ -213,5 +221,5 @@ These projects contain ideas that inspired or predated super-collections.
 ### Using superlists to complement superdictionaries
 
 * Packages that write to and read from files, such as [shelve](https://docs.python.org/3/library/shelve.html) (standard), json, YAML, [Beautifulsoup](https://code.launchpad.net/beautifulsoup/), etc. heavily rely
-  on a **combination of dictionaries and list**s**. BeautifulSoup in particular supports dot notation.
+  on a **combination of dictionaries and lists**. BeautifulSoup in particular supports dot notation.
 * In general, **the construction of any syntactic or semantic tree requires both dictionaries and lists**.
