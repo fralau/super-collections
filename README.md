@@ -35,8 +35,14 @@ markdown-toc -i README.md
   - [Install](#install)
     - [From the repository](#from-the-repository)
   - [Usage](#usage)
-  - [Restrictions](#restrictions)
-  - [Does it work?](#does-it-work)
+  - [Remarks](#remarks)
+    - [Restrictions](#restrictions)
+    - [Does it work?](#does-it-work)
+    - [When are superdictionaries and superlists _not_ recommended?](#when-are-superdictionaries-and-superlists-not-recommended)
+  - [Related data structures and ideas](#related-data-structures-and-ideas)
+    - [Standard Python](#standard-python)
+    - [Dot notation on dictionaries](#dot-notation-on-dictionaries)
+    - [Using superlists to complement superdictionaries](#using-superlists-to-complement-superdictionaries)
 
 <!-- tocstop -->
 
@@ -46,16 +52,17 @@ There are several packages that quickly convert json or YAML files into
 dictionaries that contain dictionaries, lists etc.
 
 If you want to properly use those data structures in Python, one solution is 
-to create dataclasses: [the standard ones](https://docs.python.org/3/library/dataclasses.html), or those of [Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/).
+to create specific classes.
 
 But sometimes, it is overkill. You just want your app to quickly load
-data and navigate through them.
+structured data and navigate through them.
 
-That's where **superdicts** a **superlists** are handy.
+That's where the **super-collections** package (**SuperDict** a **SuperList**) comes handy.
 
 ### Superdicts
-A **superdict** is simply a dictionary whose keys (at least those that
-are valid identifiers) are automatically accessible as attributes.
+
+
+> 📝 **Definition** <br>  A **superdictionnary** is a dictionary whose keys (at least those that are valid identifiers) are automatically accessible as attributes, with the **dot notation*.
 
 ```python
 d = SuperDict({'foo':5, 'bar': 'hello'})
@@ -64,17 +71,27 @@ d = SuperDict({'foo':5, 'bar': 'hello'})
 d.foo = 7
 ```
 
+> Several other languages, such as Javascript, LUA, Ruby, and PHP offer that **dot notation**
+> in some form or other. However, implementing that idea is not as
+> straightforward as it seems.
+> The idea of superdictionaries in Python has been around for some time
+> (see the [superdict](https://github.com/itdxer/superdict) packagage by Yuri 
+> Shevchuk, 2015).
 
-If a SuperDict contains a value that is itself a dictionary, that
-dictionary is converted in turn into a SuperDict.
+
+
+> 📝 **Property** <br> If a SuperDict object contains a value that is itself a dictionary, that dictionary is then converted in turn into a SuperDict.
 
 ### Superlists
 A **superlist** is a list where all dictionary items have been
-(automagically) converted to **superdicts**.
+(automagically) converted to **superdictionnaries**.
 
-SuperLists, combined with SuperDicts make sure that your most complex
-datastructures (from json or YAML) can be recursively converted into 
-well-behaved Python  objects.
+> ⚠️ **Superlists are indispensable** <br> They were the missing piece of the jigsaw puzzle;
+> without them, it is not possible to convert deep data structures into supercollections. 
+
+> 💡 **Deep conversion** <br> SuperLists objects, combined with SuperDicts make sure that the most complex
+> datastructures (from json or YAML) can be recursively converted into 
+> well-behaved Python  objects.
 
 
 
@@ -111,6 +128,9 @@ All methods of dict and list are available.
 Those objects are self documented. `d.properties()` is a generator
 that lists all keys that are available as attributes.
 
+The `__dir__()` method (accessible with `dir()`) is properly updated with
+those additional properties.
+
 ```python
 list(d.properties())
 > ['foo', 'bar']
@@ -126,7 +146,9 @@ statically declared in the code); or in an advanced REPL
 The methods `dict.update(other_dict)` and `list.extend(other_list)` 
 automatically cast the contents into SuperDict and SuperList as needed.
 
-## Restrictions
+## Remarks
+
+### Restrictions
 
 1. In a SuperDict, **only keys that are valid Python identifiers
    can be accessed as attributes**. If 'bar' is a key of object `foo`,
@@ -141,7 +163,8 @@ automatically cast the contents into SuperDict and SuperList as needed.
    In that case again, use the dictionary notation to access
    the value (`d['items']`, etc.). Those keys that
    cannot be accessed as attributes are said to be **masked**.
-   If you are uncertain which are available, just use 
+   If you are uncertain which are available, just use `SuperDict.properties()`.
+   method.
 3. Updating a single element (`d['foo']` for a SuperDict and `l[5]`
     for a SuperList) does not perfom any casting. That's to avoid crazy
     recursive situations, while giving
@@ -149,6 +172,46 @@ automatically cast the contents into SuperDict and SuperList as needed.
     (just cast with `SuperDict()` and `SuperList()`).
 
 
-## Does it work?
+### Does it work?
 
 Yes. It is tested with pytest. See the `test` directory for examples.
+
+### When are superdictionaries and superlists _not_ recommended?
+
+SuperDicts (and SuperLists) classes are most useful when the program you are
+writing is consuming loosely structured data (json, YAML, HTML)
+you have every reason to believe they
+are sufficiently well-formed: typically data exported from existing APIs
+or Web sources.
+
+> ⚠️ **Caution** <br> super-collections may not be the best 
+> tool when source data come from a source whose quality
+> is unsufficiently guaranteed for your needs, or is untrusted.
+
+If you want to impose strongly formatted data structures in your code, one solution is 
+to create dataclasses: [the standard ones](https://docs.python.org/3/library/dataclasses.html); especially those of [Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/), which make implicit and explicit
+controls on the integrity of the source data.
+
+## Related data structures and ideas
+
+These projects contain ideas that inspired or predated super-collections.
+
+### Standard Python
+
+* `collections.namedtuple`: tuples with dot notation ([standard python class](https://docs.python.org/3/library/collections.html#collections.namedtuple))
+* `types.SimpleNamespace`: objects with arbitrary attributes ([standard python class](https://docs.python.org/3/library/types.html#types.SimpleNamespace))
+* All Python classes have a __dict__ attribute, used at the foundation to implement the dot notation in the language, with the relative standard methods (`__setattr__()`, etc.) and functions (`setattr()`, etc.).
+* In modern Python, the `dict` class has ordered keys (by insertion order) and is subclassable.
+
+### Dot notation on dictionaries
+
+* [addict](https://github.com/mewwts/addict) (Github)
+* [DotMap](https://github.com/drgrib/dotmap): subclasses and MutableMapping and OrderedDict (Github)
+* [SuperDict](https://github.com/itdxer/superdict): subclasses `dict` (Github)
+* [dotty_dict](https://github.com/pawelzny/dotty_dict): wrapper (Github)
+
+### Using superlists to complement superdictionaries
+
+* Packages that write to and read from files, such as [shelve](https://docs.python.org/3/library/shelve.html) (standard), json, YAML, [Beautifulsoup](https://code.launchpad.net/beautifulsoup/), etc. heavily rely
+  on a **combination of dictionaries and list**s**. BeautifulSoup in particular supports dot notation.
+* In general, **the construction of any syntactic or semantic tree requires both dictionaries and lists**.

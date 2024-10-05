@@ -4,7 +4,7 @@ You can only render this file into json
 if you have [pandoc](https://pandoc.org/) installed.
 
 ## Title level 2
-This is a fairly heavy package, so **we are not installing it**.
+Pandoc is a fairly heavy package, so **we are not installing it**.
 
 ## Second title level 2
 To make things easier, the file `test_pandoc.json` is a result of the conversion to json (`pandoc test_pandoc.md -o test_pandoc.json`)
