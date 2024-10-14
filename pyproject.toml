@@ -9,7 +9,7 @@ description = "file: README.md"
 authors = [
     { name = "Laurent Franceschetti"}
 ]
-license = { file = "LICENSE" }
+license = { text = "MIT" }
 dependencies = [
     "hjson"
 ]
