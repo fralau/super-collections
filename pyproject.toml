@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "super_collections"
-version = "0.5.3"
+version = "0.5.4"
 description = "file: README.md"
 authors = [
     { name = "Laurent Franceschetti"}
