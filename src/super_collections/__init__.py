@@ -51,7 +51,7 @@ class CustomEncoder(json.JSONEncoder):
 # -------------------------------------
 class SuperDict(dict):
     """
-    A dictionary with key accessibles as properties
+    A dictionary with keys accessible as properties
     (with the dot notation)
 
     a['foo'] <=> a.foo
