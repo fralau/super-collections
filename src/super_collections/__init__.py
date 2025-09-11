@@ -30,7 +30,7 @@ class CustomEncoder(json.JSONEncoder):
     Used for debugging purposes.
     """
     def default(self, obj: Any) -> Any:
-        if isinstance(obj, datetime):
+        if isinstance(obj, datetime.date):
             return obj.isoformat()
         if isinstance(obj, UserDict):
             # for objects used by some packages
