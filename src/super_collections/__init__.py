@@ -30,12 +30,12 @@ class CustomEncoder(json.JSONEncoder):
     Used for debugging purposes.
     """
     def default(self, obj: Any) -> Any:
-        if isinstance(obj, datetime):
+        TIME_FORMATS = (datetime.datetime, datetime.date, datetime.time)
+        if isinstance(obj, TIME_FORMATS):
             return obj.isoformat()
-        if isinstance(obj, UserDict):
+        elif isinstance(obj, UserDict):
             # for objects used by some packages
             return dict(obj)
-
         elif inspect.isfunction(obj):
             return f"Function: %s %s" % (inspect.signature(obj),
                                         obj.__doc__)
