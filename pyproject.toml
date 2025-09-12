@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "super_collections"
-version = "0.5.4"
+version = "0.5.5"
 description = "file: README.md"
 authors = [{ name = "Laurent Franceschetti" }]
 license = { text = "MIT" }
@@ -29,7 +29,7 @@ Source = "https://github.com/fralau/super-collections"
 where = ["src"]
 
 [project.optional-dependencies]
-test = ["pytest>=7.0", "rich"]
+test = ["pytest>=7.0", "rich", "pyyaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]

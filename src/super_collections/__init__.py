@@ -67,6 +67,37 @@ def json_encode(obj) -> str:
     To be used for debugging purposes.
     """
     return json.dumps(obj, cls=CustomEncoder)
+
+
+def yaml_support():
+    """
+    Support yaml format: registers YAML representers for SuperDict and SuperList.
+
+    Ensures they serialize as _standard_ dicts and lists.
+    Registers with both SafeDumper and Dumper for compatibility.
+    Gracefully fails if PyYAML is not installed.
+    """
+    try:
+        import yaml
+    except ImportError as e:
+        raise ImportError(
+            "YAML support requires PyYAML. Please install it with `pip install pyyaml`."
+        ) from e
+
+    from . import SuperDict, SuperList  # local import to avoid circularity
+
+    def plain_dict(dumper, data):
+        return dumper.represent_dict(dict(data))
+
+    def plain_list(dumper, data):
+        return dumper.represent_list(list(data))
+
+    for Dumper in (yaml.SafeDumper, yaml.Dumper):
+        Dumper.add_representer(SuperDict, plain_dict)
+        Dumper.add_representer(SuperList, plain_list)
+
+
+
 # -------------------------------------
 # Collections
 # -------------------------------------
