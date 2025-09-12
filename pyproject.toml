@@ -4,15 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "super_collections"
-version = "0.5.3"
+version = "0.5.4"
 description = "file: README.md"
-authors = [
-    { name = "Laurent Franceschetti"}
-]
+authors = [{ name = "Laurent Franceschetti" }]
 license = { text = "MIT" }
-dependencies = [
-    "hjson"
-]
+dependencies = ["hjson"]
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -23,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13"
+    "Programming Language :: Python :: 3.13",
 ]
 
 [project.urls]
@@ -33,9 +29,7 @@ Source = "https://github.com/fralau/super-collections"
 where = ["src"]
 
 [project.optional-dependencies]
-test = [
-    "pytest>=7.0"
-]
+test = ["pytest>=7.0", "rich"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
