@@ -37,6 +37,7 @@ markdown-toc -i README.md
     - [From the repository](#from-the-repository)
   - [Usage](#usage)
   - [Export to JSON or Hjson](#export-to-json-or-hjson)
+  - [Export to YAML](#export-to-yaml)
   - [Remarks](#remarks)
     - [Restrictions](#restrictions)
     - [Does it work?](#does-it-work)
@@ -171,6 +172,25 @@ print (d.to_hjson())
 The module also exports a `json_encode()` function, which will attempt to serialize
 any object in Python to JSON (in an opinionated way).
 
+## Export to YAML
+
+If you wish to use PyYAML and guarantee the SuperDict and SuperList behave exactly as dict and list,
+use the `yaml_support()` function.
+
+This works with both `dump()` and `safedump()`
+
+
+```python
+from super_collections import SuperDict, SuperList, yaml_support
+yaml_support()
+
+
+d = SuperDict({"x": 1})
+l = SuperList(["a", "b"])
+
+dumped_dict = yaml.dump(d)
+dumped_list = yaml.dump(l)
+```
 
 ## Remarks
 
