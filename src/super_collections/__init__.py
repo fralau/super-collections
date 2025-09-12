@@ -28,6 +28,8 @@ class CustomEncoder(json.JSONEncoder):
     """
     Custom encoder for JSON serialization.
     Used for debugging purposes.
+
+    It's purpose is to be extremely reliable.
     """
     def default(self, obj: Any) -> Any:
         TIME_FORMATS = (datetime.datetime, datetime.date, datetime.time)
@@ -42,13 +44,84 @@ class CustomEncoder(json.JSONEncoder):
         try:
             return super().default(obj)
         except TypeError:
-            print(f"CANNOT INTERPRET {obj.__class__}")
+            pass
+
+        # It all else fails, output as best as I can
+        # If the object wants to speak for itself, I’ll let it. If it can’t, I’ll describe it.
+        try:
             return str(obj)
+        except Exception:
+            pass
+        try:
+            return repr(obj)
+        except Exception:
+            # If all else fails, return the object's type
+            return f"<OBJECT {type(obj).__name__}>"
 
 
+
+def json_encode(obj) -> str:
+    """
+    Encode a json string with the encoder.
+
+    To be used for debugging purposes.
+    """
+    return json.dumps(obj, cls=CustomEncoder)
 # -------------------------------------
 # Collections
 # -------------------------------------
+
+def get_dict(obj: object) -> dict[str, object]:
+    """
+    Extract a dictionary from various object types using introspection only.
+
+    NOTE: We do not do __dict__, because it's too general and it might take
+          a subclass of list.
+    """
+
+    # 1. Custom .asdict() method
+    if hasattr(obj, "asdict") and callable(getattr(obj, "asdict")):
+        try:
+            result = obj.asdict()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 2. .dict() method (e.g. Pydantic)
+    if hasattr(obj, "dict") and callable(getattr(obj, "dict")):
+        try:
+            result = obj.dict()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 3. .dump() method (e.g. Marshmallow)
+    if hasattr(obj, "dump") and callable(getattr(obj, "dump")):
+        try:
+            result = obj.dump()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 5. Dataclass fallback
+    try:
+        from dataclasses import is_dataclass, asdict
+        if is_dataclass(obj):
+            return asdict(obj)
+    except ImportError:
+        pass
+    except Exception:
+        pass
+
+
+    # 6. No solution: raise an error
+    raise TypeError(f"Cannot convert of type {obj.__class__.__name__}")
+
+
+
 class SuperDict(dict):
     """
     A dictionary with keys accessible as properties
@@ -71,7 +144,12 @@ class SuperDict(dict):
 
     def __init__(self, *args, **kwargs):
         # Call the superclass's __init__ method
-        super().__init__(*args, **kwargs)
+        try:
+            super().__init__(*args, **kwargs)
+        except TypeError:
+            # try to interpret:
+            obj = get_dict(args[0])
+            super().__init__(obj)
         self.__post_init__()
 
     def __post_init__(self):

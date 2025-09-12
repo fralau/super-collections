@@ -1,8 +1,10 @@
 import os
 import json
+from dataclasses import dataclass
 
 
 import pytest
+from rich import print as rprint
 
 
 from super_collections import SuperDict, SuperList
@@ -88,6 +90,43 @@ def test_update_list():
     with pytest.raises(AttributeError):
         second = r2[1]
         second.foobar # this is NOT a SuperDict
+
+
+def test_fancy_types():
+    """
+    Test fancy classes
+    """
+    class Person:
+        def __init__(self, name: str, age: int, active: bool = True) -> None:
+            self.name = name
+            self.age = age
+            self.active = active
+
+        def __repr__(self) -> str:
+            return f"Person(name={self.name!r}, age={self.age}, active={self.active})"
+
+        def dict(self) -> dict[str, object]:
+            return {
+                "name": self.name,
+                "age": self.age,
+                "active": self.active
+            }
+
+
+    p = Person("Joe", 42)
+    rprint(SuperDict(p).to_json())
+
+    # -----------
+    # Dataclass
+    # -----------
+    @dataclass
+    class Book:
+        title: str
+        author: str
+        year: int
+    b = Book(title="1984", author="George Orwell", year=1949)
+    rprint(SuperDict(b).to_json())
+    
 
 
 def test_read_json_file():

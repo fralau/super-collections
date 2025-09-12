@@ -36,6 +36,7 @@ markdown-toc -i README.md
   - [Install](#install)
     - [From the repository](#from-the-repository)
   - [Usage](#usage)
+  - [Export to JSON or Hjson](#export-to-json-or-hjson)
   - [Remarks](#remarks)
     - [Restrictions](#restrictions)
     - [Does it work?](#does-it-work)
@@ -153,6 +154,23 @@ statically declared in the code); or in an advanced REPL
 
 The methods `dict.update(other_dict)` and `list.extend(other_list)` 
 automatically cast the contents into SuperDict and SuperList as needed.
+
+## Export to JSON or Hjson
+
+You can export a SuperDict or SuperList to JSON or [Hjson](https://hjson.github.io/), for debug purposes.
+It is not guaranteed that it will preserve all the meaningful information you want, but all basic types
+will be preserved. 
+
+> Python DateTimes are converted into ISO Dates.
+
+```python
+print (d.to_json())
+print (d.to_hjson())
+```
+
+The module also exports a `json_encode()` function, which will attempt to serialize
+any object in Python to JSON (in an opinionated way).
+
 
 ## Remarks
 
