@@ -20,7 +20,7 @@ import hjson
 # -------------------------------------
 # Low-level fixtures
 # -------------------------------------
-from collections import UserDict
+from collections import UserDict, deque, UserList
 
 DICT_TYPES = dict, UserDict
 
@@ -98,9 +98,7 @@ def yaml_support():
 
 
 
-# -------------------------------------
-# Collections
-# -------------------------------------
+
 
 def get_dict(obj: object) -> dict[str, object]:
     """
@@ -152,6 +150,19 @@ def get_dict(obj: object) -> dict[str, object]:
     raise TypeError(f"Cannot convert of type {obj.__class__.__name__}")
 
 
+def is_sequence_like(obj):
+    try:
+        length = len(obj)
+        if length > 0:
+            _ = obj[0]
+        _ = list(obj)  # triggers __iter__ via __getitem__
+        return True
+    except Exception:
+        return False
+
+# -------------------------------------
+# Collections
+# -------------------------------------
 
 class SuperDict(dict):
     """
@@ -358,3 +369,32 @@ class SuperList(list):
         return("\n".join(r))     
 
 SUPER_TYPES = SuperDict, SuperList
+
+# -------------------------------------
+# Factory
+# -------------------------------------
+LIST_TYPES = 'ndarray', 'Series'
+
+from collections.abc import Sequence
+
+
+
+
+
+def super_collect(obj) -> SuperDict | SuperList:
+    """
+    Factory function:
+    Read an object and dispatch it into either a SuperDict or a SuperList
+    """
+    if isinstance(obj, (str, bytes, bytearray)):
+        raise TypeError(f"Objects of type '{type(obj).__name__}' "
+                        "are not accepted (not list-like)")
+    elif isinstance(obj, (range, list, tuple, set, deque, UserList)):
+        return SuperList(obj)
+    elif is_sequence_like(obj) or isinstance(obj, Sequence):
+        return SuperList(obj)
+    elif type(obj).__name__ in LIST_TYPES:
+        # We name check those ones
+        return SuperList(obj)
+    else:
+        return SuperDict(obj)
