@@ -1,8 +1,9 @@
 import pytest
 from collections import deque, UserList
 from collections.abc import Sequence
+from rich import print
 
-from super_collections import SuperList, SuperDict, super_collect
+from super_collections import SuperList, SuperDict, SuperCollection, super_collect
 
 
 LIST_TYPES = ['CustomListLike']  # Example duck-typed name
@@ -19,7 +20,7 @@ class CustomListLike:
 
     def __len__(self):
         return len(self._data)
-
+Sequence.register(CustomListLike)
 
 
 class CustomListLike2:
@@ -41,7 +42,9 @@ Sequence.register(CustomListLike2)
 def assert_type(obj, class_):
     "Syntactic sugar for super_collection test"
     print(f"Testing '{type(obj).__name__}' as {class_}")
-    assert isinstance(super_collect(obj), class_)
+    coll_obj = super_collect(obj)
+    assert isinstance(coll_obj, class_)
+    assert isinstance(coll_obj, SuperCollection)
 
 # ---------------------
 # Tests
@@ -78,3 +81,15 @@ def test_super_collect_invalid_types(bad_type):
     with pytest.raises(TypeError):
         print(f"Checking that {bad_type} <{type(bad_type).__name__}> is NOT accepted.")
         super_collect(bad_type)
+
+
+def test_super_collection_class():
+    obj1 = SuperList([1, 3, 5])
+    assert isinstance(obj1, SuperCollection)
+
+    obj2 = SuperDict({'a': 5, 'b':7})
+    assert isinstance(obj2, SuperCollection)
+
+    obj = SuperCollection.collect([obj1, obj2])
+    print("My SuperCollection object:", obj)
+    assert isinstance(obj, SuperCollection)

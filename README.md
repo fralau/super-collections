@@ -29,10 +29,15 @@ markdown-toc -i README.md
 <!-- toc -->
 
 - [Python Super Collections](#python-super-collections)
+  - [What are SuperCollections?](#what-are-supercollections)
+    - [What is the problem?](#what-is-the-problem)
+    - [Definitions](#definitions)
   - [How it works](#how-it-works)
     - [Superdicts](#superdicts)
     - [Superlists](#superlists)
     - [Why Combining SuperDicts with SuperLists?](#why-combining-superdicts-with-superlists)
+    - [SuperCollection](#supercollection)
+    - [Factory function](#factory-function)
   - [Install](#install)
     - [From the repository](#from-the-repository)
   - [Usage](#usage)
@@ -49,7 +54,9 @@ markdown-toc -i README.md
 
 <!-- tocstop -->
 
-## How it works
+## What are SuperCollections?
+
+### What is the problem?
 
 There are several packages that quickly convert json or YAML files into 
 dictionaries that contain dictionaries, lists etc.
@@ -60,12 +67,34 @@ to create specific classes.
 But sometimes, it is overkill. You just want your app to quickly load
 structured data and navigate through them.
 
-That's where the **super-collections** package (**SuperDict** a **SuperList**) comes handy.
+That's where the **super-collections** package comes handy.
+
+### Definitions
+
+- A **SuperCollection** is a nested data structure that can encode 
+  any type of information (in the same way as a JSON file).
+  It is essentially constituted of dictionaries and lists, where
+  dictionaries can contain lists and vice-versa, and the root can
+  be either a dictionary or a list.
+
+- An **elementary datatype** is a non-mutable type: str, int, str,
+  float in Python that is used to build classes.
+
+- A **SuperList** is a list that can contain SuperCollections, or
+  elementary datatypes.
+
+- A **SuperDict** is a dict that can contain SuperCollections,
+  or elementary datatypes. A key advantage of SuperDicts over dictionaries,
+  is that its keys can be accessed as attributes (providing they are
+  valid Python identifiers and they don't conflict with pre-existing attributes).
+  
+## How it works
 
 ### Superdicts
 
 
-> 📝 **Definition** <br>  A **superdictionnary** is a dictionary whose keys (at least those that are valid identifiers) are automatically accessible as attributes, with the **dot notation*.
+> 📝 **Definition** <br>  A **superdictionnary** is a dictionary
+ whose keys (at least those that are valid identifiers) are automatically accessible as attributes, with the **dot notation*.
 
 ```python
 d = SuperDict({'foo':5, 'bar': 'hello'})
@@ -85,6 +114,11 @@ d.foo = 7
 
 > 📝 **Property** <br> If a SuperDict object contains a value that is itself a dictionary, that dictionary is then converted in turn into a SuperDict.
 
+If the object is not a dict or immediately compatible, it will try the following conversions:
+
+- the methods `.asdict()`, `.dict()` or `dump()`, providing they actually generate a `dict`.
+- if the object is a dataclass, it will apply the `asdict()` function on it.
+
 ### Superlists
 A **superlist** is a list where all dictionary items have been
 (automagically) converted to **superdictionnaries**.
@@ -103,8 +137,38 @@ it is possible to ensure that all nested dictionaries within lists will also be 
 > datastructures (from json or YAML) can be recursively converted into 
 > well-behaved Python  objects.
 
+### SuperCollection
 
+**SuperCollection** is an abstract class containing SuperList and SuperDict.
 
+It means that SuperList and SuperDict objects are **instances** of 
+SuperCollection, but they do not inherit from it.
+
+```python
+obj1 = SuperList([1, 3, 5])
+assert isinstance(obj1, SuperCollection)
+
+obj2 = SuperDict({'a': 5, 'b':7})
+assert isinstance(obj2, SuperCollection)
+```
+
+### Factory function
+
+You can use the `super_collect()` function to create a SuperCollection
+(SuperList or SuperDict) from an object.
+
+It is designed to work on any list or dict, but it will also attempt
+to process other types:
+
+- all **sequences** (see [definition](https://docs.python.org/3/glossary.html#term-sequence)), 
+  in other words objects whose class is registered as
+  instance of `collections.abs.Sequence` 
+  will be converted into lists. This applies to `tuple`, 
+  `range`, `collections.UserList`, etc.
+- Special types: `set`, `deque` as well as `ndarray` (Numpy or compatible)
+  and `Series` (Pandas and others; your mileage may vary).
+- Otherwise, will try to generate a SuperDict.
+  
 
 ## Install
 

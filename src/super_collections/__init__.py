@@ -13,6 +13,7 @@ import datetime
 import json
 import inspect
 from typing import Any
+from abc import ABC, abstractmethod
 
 
 import hjson
@@ -20,7 +21,7 @@ import hjson
 # -------------------------------------
 # Low-level fixtures
 # -------------------------------------
-from collections import UserDict, deque, UserList
+from collections import UserDict, deque
 
 DICT_TYPES = dict, UserDict
 
@@ -371,13 +372,11 @@ class SuperList(list):
 SUPER_TYPES = SuperDict, SuperList
 
 # -------------------------------------
-# Factory
+# Factory function
 # -------------------------------------
 LIST_TYPES = 'ndarray', 'Series'
 
 from collections.abc import Sequence
-
-
 
 
 
@@ -389,12 +388,57 @@ def super_collect(obj) -> SuperDict | SuperList:
     if isinstance(obj, (str, bytes, bytearray)):
         raise TypeError(f"Objects of type '{type(obj).__name__}' "
                         "are not accepted (not list-like)")
-    elif isinstance(obj, (range, list, tuple, set, deque, UserList)):
+    elif isinstance(obj, Sequence):
         return SuperList(obj)
-    elif is_sequence_like(obj) or isinstance(obj, Sequence):
-        return SuperList(obj)
+    elif isinstance(obj, (set, deque)):
+         # Non-sequence standard types that also work
+         return SuperList(obj)    
     elif type(obj).__name__ in LIST_TYPES:
         # We name check those ones
         return SuperList(obj)
     else:
         return SuperDict(obj)
+    
+
+# -------------------------------------
+# Super Collection
+# -------------------------------------
+class SuperCollection(ABC):
+    """
+    The super collection abstract class
+    """
+
+    @staticmethod
+    def collect(obj) -> SuperDict | SuperList:
+        "The factory function"
+        return super_collect(obj)
+    
+    @abstractmethod
+    def __post_init__(self):
+        "Recursively transform collection"
+    
+
+    def to_json(self):
+        """
+        Convert to json.
+
+        It does not have any claim of fitness for any
+        particular purpose, except showing what's in structure,
+        for string output.
+
+        CAUTION: It must be reliable, so well tested.
+        """
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        "Print the object (current convention is hjson, no json)"
+        pass
+    
+    @abstractmethod
+    def __rich__(self):
+        "Print to the rich format"
+        pass
+
+SuperCollection.register(SuperList)
+SuperCollection.register(SuperDict)
