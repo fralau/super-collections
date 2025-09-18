@@ -1,10 +1,16 @@
-import pytest
+import os
 from collections import deque, UserList
 from collections.abc import Sequence
+import json
+
 from rich import print
+import pytest
+
 
 from super_collections import SuperList, SuperDict, SuperCollection, super_collect
 
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LIST_TYPES = ['CustomListLike']  # Example duck-typed name
 
@@ -43,6 +49,7 @@ def assert_type(obj, class_):
     "Syntactic sugar for super_collection test"
     print(f"Testing '{type(obj).__name__}' as {class_}")
     coll_obj = super_collect(obj)
+    assert coll_obj is not None, f"Object {type(obj)} translates to None?"
     assert isinstance(coll_obj, class_)
     assert isinstance(coll_obj, SuperCollection)
 
@@ -73,7 +80,8 @@ def test_super_collect_set():
     assert_type({1, 2}, SuperList)
 
 def test_super_collect_dict():
-    assert_type({'a': 1}, SuperDict)
+    obj = {'a': 1}
+    assert_type(obj, SuperDict)
 
 
 @pytest.mark.parametrize("bad_type", ["string", b"bytes", bytearray(b"abc")])
@@ -93,3 +101,20 @@ def test_super_collection_class():
     obj = SuperCollection.collect([obj1, obj2])
     print("My SuperCollection object:", obj)
     assert isinstance(obj, SuperCollection)
+
+
+def test_read_json():
+    "Test collecting a JSON file into a SuperCollection"
+    # This file is actually a dictionary:
+    FILENAME = os.path.join(CURRENT_DIR, 'solar_system.json')
+    # Open the file and load its contents
+    with open(FILENAME, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    # Now `data` is a Python structure — usually a dict or list
+    content = SuperCollection.collect(data)
+    print(str(content)[:200])
+    print("(...)")
+    # Make sure it is reflexive
+    content2 = SuperCollection.collect(content)
+    assert content == content2
+    assert dict(content) == dict(content2)

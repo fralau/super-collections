@@ -157,7 +157,19 @@ assert isinstance(obj2, SuperCollection)
 You can use the `super_collect()` function to create a SuperCollection
 (SuperList or SuperDict) from an object.
 
-It is designed to work on any list or dict, but it will also attempt
+
+
+**It is particularly useful for converting Python data structures such as
+JSON files.**
+
+```python
+import json
+with open(FILENAME, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+content = super_collect(data)
+```
+
+ `super_collect()` is designed to work on any list or dict, but it will also attempt
 to process other types:
 
 - all **sequences** (see [definition](https://docs.python.org/3/glossary.html#term-sequence)), 
@@ -168,7 +180,13 @@ to process other types:
 - Special types: `set`, `deque` as well as `ndarray` (Numpy or compatible)
   and `Series` (Pandas and others; your mileage may vary).
 - Otherwise, will try to generate a SuperDict.
-  
+
+This is also available as a static method of the `SuperCollection` class:
+
+```python
+content = SuperCollection.collect(data)
+```
+
 
 ## Install
 

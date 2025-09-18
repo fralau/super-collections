@@ -101,65 +101,7 @@ def yaml_support():
 
 
 
-def get_dict(obj: object) -> dict[str, object]:
-    """
-    Extract a dictionary from various object types using introspection only.
 
-    NOTE: We do not do __dict__, because it's too general and it might take
-          a subclass of list.
-    """
-
-    # 1. Custom .asdict() method
-    if hasattr(obj, "asdict") and callable(getattr(obj, "asdict")):
-        try:
-            result = obj.asdict()
-            if isinstance(result, dict):
-                return result
-        except Exception:
-            pass
-
-    # 2. .dict() method (e.g. Pydantic)
-    if hasattr(obj, "dict") and callable(getattr(obj, "dict")):
-        try:
-            result = obj.dict()
-            if isinstance(result, dict):
-                return result
-        except Exception:
-            pass
-
-    # 3. .dump() method (e.g. Marshmallow)
-    if hasattr(obj, "dump") and callable(getattr(obj, "dump")):
-        try:
-            result = obj.dump()
-            if isinstance(result, dict):
-                return result
-        except Exception:
-            pass
-
-    # 5. Dataclass fallback
-    try:
-        from dataclasses import is_dataclass, asdict
-        if is_dataclass(obj):
-            return asdict(obj)
-    except ImportError:
-        pass
-    except Exception:
-        pass
-
-
-    # 6. No solution: raise an error
-    raise TypeError(f"Cannot convert of type {obj.__class__.__name__}")
-
-
-def is_sequence_like(obj):
-    try:
-        length = len(obj)
-        if length > 0:
-            _ = obj[0]
-        _ = list(obj)  # triggers __iter__ via __getitem__
-        return True
-    except Exception:
-        return False
 
 # -------------------------------------
 # Collections
@@ -374,9 +316,85 @@ SUPER_TYPES = SuperDict, SuperList
 # -------------------------------------
 # Factory function
 # -------------------------------------
-LIST_TYPES = 'ndarray', 'Series'
 
 from collections.abc import Sequence
+
+
+LIST_TYPES = 'ndarray', 'Series'
+
+def get_list(obj) -> list:
+    """
+    Get list from various objects.
+
+    It is the default choice.
+    It will raise a TypeError if a dict would be probably better suited.
+    """
+    if isinstance(obj, Sequence):
+        # this includes lists proper
+        return list(obj)
+    elif isinstance(obj, (set, deque)):
+        # Non-sequence standard types that also work
+        return list(obj)    
+    elif type(obj).__name__ in LIST_TYPES:
+        # We name check those ones
+        return list(obj)
+    else:
+        raise TypeError(f"Objects of type '{type(obj).__name__}' are not lists")
+
+
+def get_dict(obj: object) -> dict[str, object]:
+    """
+    Extract a dictionary from various object types using introspection only.
+
+    NOTE: We do not do __dict__, because it's too general and it might take
+          a subclass of list.
+    """
+
+    try:
+        return dict(obj)
+    except TypeError:
+        pass
+
+    # 1. Custom .asdict() method
+    if hasattr(obj, "asdict") and callable(getattr(obj, "asdict")):
+        try:
+            result = obj.asdict()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 2. .dict() method (e.g. Pydantic)
+    if hasattr(obj, "dict") and callable(getattr(obj, "dict")):
+        try:
+            result = obj.dict()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 3. .dump() method (e.g. Marshmallow)
+    if hasattr(obj, "dump") and callable(getattr(obj, "dump")):
+        try:
+            result = obj.dump()
+            if isinstance(result, dict):
+                return result
+        except Exception:
+            pass
+
+    # 5. Dataclass fallback
+    try:
+        from dataclasses import is_dataclass, asdict
+        if is_dataclass(obj):
+            return asdict(obj)
+    except ImportError:
+        pass
+    except Exception:
+        pass
+
+    # 6. No solution: raise an error
+    raise TypeError(f"Cannot convert of type {obj.__class__.__name__}")
+
 
 
 
@@ -387,18 +405,17 @@ def super_collect(obj) -> SuperDict | SuperList:
     """
     if isinstance(obj, (str, bytes, bytearray)):
         raise TypeError(f"Objects of type '{type(obj).__name__}' "
-                        "are not accepted (not list-like)")
-    elif isinstance(obj, Sequence):
-        return SuperList(obj)
-    elif isinstance(obj, (set, deque)):
-         # Non-sequence standard types that also work
-         return SuperList(obj)    
-    elif type(obj).__name__ in LIST_TYPES:
-        # We name check those ones
-        return SuperList(obj)
-    else:
-        return SuperDict(obj)
-    
+                        "are not accepted (elementary types)")
+    try:
+        list_obj = get_list(obj)
+        return SuperList(list_obj)
+    except TypeError:
+        pass
+    try:
+        dict_obj = get_dict(obj)
+        return SuperDict(dict_obj)
+    except TypeError:
+        raise TypeError(f"Cannot convert this object of type '{type(obj).__name__}'")
 
 # -------------------------------------
 # Super Collection
