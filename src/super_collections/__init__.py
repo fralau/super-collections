@@ -12,7 +12,7 @@ of lists and dictionaries.
 import datetime
 import json
 import inspect
-from typing import Any
+from typing import Any, Union
 from abc import ABC, abstractmethod
 
 
@@ -322,7 +322,7 @@ from collections.abc import Sequence
 
 LIST_TYPES = 'ndarray', 'Series'
 
-def get_list(obj) -> list:
+def get_list(obj:Any) -> list:
     """
     Get list from various objects.
 
@@ -342,7 +342,7 @@ def get_list(obj) -> list:
         raise TypeError(f"Objects of type '{type(obj).__name__}' are not lists")
 
 
-def get_dict(obj: object) -> dict[str, object]:
+def get_dict(obj: Any) -> dict[str, object]:
     """
     Extract a dictionary from various object types using introspection only.
 
@@ -398,7 +398,7 @@ def get_dict(obj: object) -> dict[str, object]:
 
 
 
-def super_collect(obj) -> SuperDict | SuperList:
+def super_collect(obj:Any) -> Union[SuperDict, SuperList]:
     """
     Factory function:
     Read an object and dispatch it into either a SuperDict or a SuperList
@@ -426,7 +426,7 @@ class SuperCollection(ABC):
     """
 
     @staticmethod
-    def collect(obj) -> SuperDict | SuperList:
+    def collect(obj) -> Union[SuperDict, SuperList]:
         "The factory function"
         return super_collect(obj)
     
