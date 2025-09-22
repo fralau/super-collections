@@ -2,7 +2,7 @@
 
 #  Python Super Collections
 
-**Dictionaries as you dreamed them when you were a kid.**
+**Dictionaries and lists as you dreamed them when you were a kid.**
 
 Instantly Convert json and YAML files into objects with attributes.
 </div>
