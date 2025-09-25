@@ -47,6 +47,11 @@ markdown-toc -i README.md
     - [Restrictions](#restrictions)
     - [Does it work?](#does-it-work)
     - [When are superdictionaries and superlists _not_ recommended?](#when-are-superdictionaries-and-superlists-not-recommended)
+  - [Shelves and SuperShelves](#shelves-and-supershelves)
+    - [Metaphor of a shelf](#metaphor-of-a-shelf)
+    - [Definition of a shelf (data structure)](#definition-of-a-shelf-data-structure)
+    - [Iteration through a shelf](#iteration-through-a-shelf)
+    - [SuperShelf](#supershelf)
   - [Related data structures and ideas](#related-data-structures-and-ideas)
     - [Standard Python](#standard-python)
     - [Dot notation on dictionaries](#dot-notation-on-dictionaries)
@@ -181,8 +186,8 @@ to process other types:
   and `Series` (Pandas and others; your mileage may vary).
 - Otherwise, will try to generate a SuperDict.
 
-This is also available as a static method of the `SuperCollection` class:
 
+This function is also available as a static method of the `SuperCollection` class:
 ```python
 content = SuperCollection.collect(data)
 ```
@@ -319,6 +324,53 @@ or Web sources.
 If you want to impose strongly formatted data structures in your code, one solution is 
 to create [dataclasses](https://docs.python.org/3/library/dataclasses.html); especially those of [Pydantic](https://docs.pydantic.dev/latest/concepts/dataclasses/), which make implicit and explicit
 controls on the integrity of the source data.
+
+## Shelves and SuperShelves
+
+### Metaphor of a shelf
+
+Imagine a real shelf in your home, with compartments. You place items in each compartment: books, boxes, a photo frame, etc. 
+Some compartments have labels ("History Books", "Photos"), others don’t. To refer to a compartment, you can use its
+position ("the third from the left"), or refer to it by its label. 
+
+If it was a really big shelf, as in a library, and you were given the label of a compartment and no other information,
+finding it would take some time, because you would have to scan the whole shelf each time.
+
+To speed things up, you would have to keep a cardfile with cards for each label, indicating the position of the corresponding compartment in the shelf.
+
+### Definition of a shelf (data structure)
+A Shelf data structure works the same way. Conceptually, a shelf is very intuitive: you can think about it as a list where
+you can _also_ use labels for fast retrieval.
+
+It’s a line of compartments, each holding one object. 
+
+If implements **dual addressing**: You can access an item by a **key** that can be either its index (2) or its label, 
+providing it exists ("Receipts"). 
+In other words, a shelf works _both_ as a list and a dictionary, and has the attributes of both classes.
+
+Internally, a shelf is a **list of cells**, with a value and an optional **label**. It is complemented by a **cardfile**
+that converts the labels of the cells into their index. However, you don't have to worry about it:
+when you add an item to the shelf, change it or delete it, both the list and the carfile are kept up-to-date.
+
+### Iteration through a shelf
+
+**When you iterate through a shelf, you return the values as in a list.** 
+
+> **⚠️ IMPORTANT NOTE:** This is distinct from a Python dictionary, where iteration returns the keys.
+
+* If you want the keys  use the `.keys()` method. For items that do not have a label, it returns the index.
+* If you want the key, value pairs, use the `.items()` method.
+* The `.values()` method is provided for compatibility with a dictionary.
+
+
+### SuperShelf
+
+A SuperShelf is essentially a shelf that behaves as a super-collection:
+
+- it converts recursively all the content into shelves
+- it exports the labels as attributes (when they are valid Python identifiers and not masked)
+
+In other words it behaves as SuperList and a SuperDict at the same time.
 
 ## Related data structures and ideas
 
