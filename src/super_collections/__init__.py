@@ -513,7 +513,6 @@ class SuperShelf(Shelf):
         - the key being a valid Python identifier.
         - the attribute not being shadowed by an already existing one in the SuperShelf class.
         """
-        print("GETATTR called for:", name)
         ERR_MSG = "Cannot find attribute '%s'" % name
         try:
             return self[name]

@@ -39,7 +39,13 @@ def test_setitem_by_index_and_label():
     s[0] = "X"
     s["thing"] = "Y"
     assert s[0] == "X"
+    assert s[1] == "Y"
     assert s["thing"] == "Y"
+
+    assert list(s) == ["X", "Y"]
+    assert list(s.values()) == ["X", "Y"]
+    assert list(s.keys()) == [0, "thing"]
+    print(list(s.cells()))
 
 def test_set_new():
     """Test value assignment (new) by label."""

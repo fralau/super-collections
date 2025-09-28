@@ -348,9 +348,51 @@ If implements **dual addressing**: You can access an item by a **key** that can 
 providing it exists ("Receipts"). 
 In other words, a shelf works _both_ as a list and a dictionary, and has the attributes of both classes.
 
+You can write:
+
+```python
+    s = Shelf()
+    s.append("x")
+    s.append("y", label="thing")
+```
+
+or:
+
+```python
+    s = Shelf()
+    s[0] = "X"
+    s["thing"] = "Y"
+```
+
+And then:
+```python
+    assert s[0] == "X"
+    assert s[1] == "Y"
+    assert s["thing"] == "Y"
+
+    assert list(s) == ["X", "Y"]
+    assert list(s.values()) == ["X", "Y"]
+    assert list(s.keys()) == [0, "thing"]
+```
+
 Internally, a shelf is a **list of cells**, with a value and an optional **label**. It is complemented by a **cardfile**
 that converts the labels of the cells into their index. However, you don't have to worry about it:
 when you add an item to the shelf, change it or delete it, both the list and the carfile are kept up-to-date.
+
+You can consult the internals:
+
+```python
+print(list(s.cells()))
+```
+
+It would return a list of mutable objects:
+
+```
+[Cell(value='X', label=None), Cell(value='Y', label='thing')]
+```
+
+> ⚠️ **Caution** <br> Do _not_ change the cells directly,
+> since the cardfile would not be updated.
 
 ### Iteration through a shelf
 

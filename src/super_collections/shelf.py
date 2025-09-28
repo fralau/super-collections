@@ -204,7 +204,12 @@ class Shelf(list):
         return (value for value in self)
     
     def cells(self):
-        "Yield all cells; this is useful for auditability"
+        """
+        Yield all cells; this is useful for auditability
+
+        ⚠️  Do not modify cell.label directly.
+            Use `self.update[label] = value` to do so.
+        """
         for cell in super().__iter__():
             yield cell
 
