@@ -5,9 +5,11 @@
 **Dictionaries and lists as you dreamed them when you were a kid.**
 
 Instantly Convert json and YAML files into objects with attributes.
-</div>
 
 [![Run Pytest on Multiple Python Versions](https://github.com/fralau/super-collections/actions/workflows/test.yml/badge.svg)](https://github.com/fralau/super-collections/actions/workflows/test.yml)
+</div>
+
+
 
 ```python
 import json
