@@ -12,7 +12,7 @@ of lists and dictionaries.
 import datetime
 import json
 import inspect
-from typing import Any, Union, Optional
+from typing import Any, Union, Optional, Dict
 from abc import ABC, abstractmethod
 
 
@@ -355,7 +355,7 @@ def get_list(obj:Any) -> list:
         raise TypeError(f"Objects of type '{type(obj).__name__}' are not lists")
 
 
-def get_dict(obj: Any) -> dict[str, object]:
+def get_dict(obj: Any) -> Dict[str, object]:
     """
     Extract a dictionary from various object types using introspection only.
 
