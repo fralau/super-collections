@@ -7,6 +7,8 @@
 Instantly Convert json and YAML files into objects with attributes.
 </div>
 
+[![Run Pytest on Multiple Python Versions](https://github.com/fralau/super-collections/actions/workflows/test.yml/badge.svg)](https://github.com/fralau/super-collections/actions/workflows/test.yml)
+
 ```python
 import json
 from super_collections import SuperDict
