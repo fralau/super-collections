@@ -1,6 +1,7 @@
 import os
 import json
 from dataclasses import dataclass
+from typing import Dict
 
 
 import pytest
@@ -105,7 +106,7 @@ def test_fancy_types():
         def __repr__(self) -> str:
             return f"Person(name={self.name!r}, age={self.age}, active={self.active})"
 
-        def dict(self) -> dict[str, object]:
+        def dict(self) -> Dict[str, object]:
             return {
                 "name": self.name,
                 "age": self.age,
