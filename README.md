@@ -391,7 +391,7 @@ It would return a list of mutable objects:
 [Cell(value='X', label=None), Cell(value='Y', label='thing')]
 ```
 
-> ⚠️ **Caution** <br> Do _not_ change the cells directly,
+> ⚠️ **Caution** <br> Do _not_ change the cells' labels directly,
 > since the cardfile would not be updated.
 
 ### Iteration through a shelf

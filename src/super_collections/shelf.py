@@ -4,6 +4,10 @@ Shelf class: a labelled list
 
 
 from typing import Any, Union, Optional, Dict
+
+# A label is either str or int
+LabelType = Union[str, int]
+
 class Cell:
     "A cell is a mutable structure with two items: value and label"
     __slots__ = ('value', 'label')
@@ -120,14 +124,14 @@ class Shelf(list):
     # --------------------------------
     # Common list/dict access and update methods
     # --------------------------------
-    def __getitem__(self, key):
+    def __getitem__(self, key: LabelType):
         if isinstance(key, int):
             return super().__getitem__(key).value
         elif isinstance(key, str):
             return self._cardfile[key].value
         raise TypeError("Key must be int or str")
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: LabelType, value):
         if isinstance(key, int):
             cell = super().__getitem__(key)
             cell.value = value
@@ -141,7 +145,7 @@ class Shelf(list):
         else:
             raise TypeError("Key must be int or str")
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: LabelType):
         if isinstance(key, int):
             cell = super().__getitem__(key)
             super().__delitem__(key)
@@ -153,14 +157,14 @@ class Shelf(list):
         else:
             raise TypeError("Key must be int or str")
 
-    def __contains__(self, key: str | int) -> bool:
+    def __contains__(self, key: LabelType) -> bool:
         "Check if label or index exists"
         if isinstance(key, str):
             return key in self._cardfile
         return 0 <= key < len(self)
 
 
-    def pop(self, key: str | int | None = None, default: Any = None) -> Any:
+    def pop(self, key: LabelType = None, default: Any = None) -> Any:
         """
         Remove and return value by label, index, or last item.
 
@@ -187,7 +191,7 @@ class Shelf(list):
     # Dict-specific methods
     # ---------------------
 
-    def get(self, key: str | int, default: Any = None) -> Any:
+    def get(self, key: LabelType, default: Any = None) -> Any:
         "Safe retrieval by label or index"
         try:
             return self[key]
@@ -226,6 +230,8 @@ class Shelf(list):
         Rename means here "relabel a cell"
         (assuming the old label exists and the new label is not used yet).
         """
+        if not isinstance(old_label, str) or not isinstance(new_label, str):
+            raise KeyError("Labels must be str or int")
         if new_label in self._cardfile:
             raise KeyError(f"Label '{new_label}' already exists")
         try:
