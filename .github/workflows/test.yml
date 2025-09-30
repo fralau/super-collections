@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .[dev]  # or just pip install pytest if you don't use extras
+          pip install -e .[test]  # or just pip install pytest if you don't use extras
 
       - name: Run tests
         run: pytest
