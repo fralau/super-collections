@@ -3,7 +3,7 @@ Shelf class: a labelled list
 """
 
 
-from typing import Any, Union, Optional, Dict
+from typing import Any, Union, Optional, Dict, List
 
 # A label is either str or int
 LabelType = Union[str, int]
@@ -73,7 +73,7 @@ class Shelf(list):
             self.append(value, label=label)
 
     @classmethod
-    def from_list(cls, values: list[Any]) -> "Shelf":
+    def from_list(cls, values: List[Any]) -> "Shelf":
         """Construct Shelf from a list of unlabeled values."""
         if not isinstance(values, list):
             raise TypeError("from_list expects a list")
@@ -83,7 +83,7 @@ class Shelf(list):
         return shelf
 
     @classmethod
-    def from_dict(cls, mapping: dict[str, Any]) -> "Shelf":
+    def from_dict(cls, mapping: Dict[str, Any]) -> "Shelf":
         """Construct Shelf from a dict of labeled values."""
         if not isinstance(mapping, dict):
             raise TypeError("from_dict expects a dict")
@@ -109,7 +109,7 @@ class Shelf(list):
                 raise ValueError(f"Duplicate label: {label}")
             self._cardfile[label] = cell
 
-    def update(self, mapping: dict[str, Any]) -> None:
+    def update(self, mapping: Dict[str, Any]) -> None:
         "Bulk update labeled cells"
         for label, value in mapping.items():
             if label in self._cardfile:
@@ -242,7 +242,7 @@ class Shelf(list):
         del self._cardfile[old_label]
         self._cardfile[new_label] = cell
 
-    def update(self, mapping: dict[str, Any]) -> None:
+    def update(self, mapping: Dict[str, Any]) -> None:
         "Bulk update labeled cells"
         for label, value in mapping.items():
             if label in self._cardfile:
